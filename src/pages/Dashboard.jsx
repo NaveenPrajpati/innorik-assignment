@@ -2,7 +2,8 @@ import axios from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import { Context } from '../Context/Mycontext'
 import { Navigate } from 'react-router-dom'
-import { readlat, updateAdd, updateTags, updatetags } from '../services/userService'
+import { getUserDetail, readlat, updateAdd, updateTags, updatetags } from '../services/userService'
+import { toast } from 'react-hot-toast'
 
 export default function Dashboard() {
 
@@ -13,8 +14,10 @@ export default function Dashboard() {
   const [interests,setInterests]=useState([])
   const [readlate,setReadlate]=useState([])
 
+  const baseUrl=`https://gnews.io/api/v4/search?q=${interests[selectIndex]}&lang=en&country=india&max=10&apikey=de62bc6ec8fb5ff8aea28d42c1f8afb4`
+
    async function getNewsData(){
-       await axios.get('https://gnews.io/api/v4/search?q=example&lang=en&country=india&max=10&apikey=de62bc6ec8fb5ff8aea28d42c1f8afb4')
+       await axios.get(baseUrl)
         .then(res=>{
          
 
@@ -23,19 +26,33 @@ export default function Dashboard() {
  
     }
 
+    async function getUserData(){
+      getUserDetail(user.userData.id)
+      .then(res=>{
+        console.log(res.data)
+        setInterests(res.data.interests)
+        setReadlate(res.data.readLater)
+        
+      })
+      .catch(err=>{
+        console.log(err)
+      })
+    }
+
     useEffect(()=>{
 
-        getNewsData()
+        getUserData()
+        // getNewsData()
 
         
-    },[])
+    },[baseUrl])
 
     function readLater(readLater){
       readlat({id:user.userData.id,readLater})
       .then(res=>{
         console.log(res.data.readLater)
         setReadlate(res.data.readLater)
-        console.log('updated')
+        toast.success('article add to read later')
       })
       .catch(err=>{
         console.log(err)
@@ -43,9 +60,7 @@ export default function Dashboard() {
       setUpdate(false)
     }
 
-    function updateTag(tag){
-      setInterests([...interests,editTag])
-      
+    function updateTag(){
       updateTags({id:user.userData.id,interests})
       .then(res=>{
      
@@ -72,13 +87,19 @@ export default function Dashboard() {
          }}>x</p>}
       </div>
     ))}
-    {update && <input type="text" placeholder='Add tag' onChange={(e)=>setEditTag(e.target.value)} className=' outline-none rounded-lg px-2'/> }
+    {update && <div className='flex items-center bg-white'>
+     <input type="text" placeholder='Add tag' onChange={(e)=>setEditTag(e.target.value)} className=' outline-none rounded-lg px-2'/> 
+     <button onClick={()=> setInterests([...interests,editTag])} className=''>add</button>
+    </div>}
    {!update? <button className='px-2 border' onClick={()=>{
 
    setUpdate(true)
    }}>edit </button>:
     <button className='px-2 border' onClick={updateTag}>update </button>}
     </div>
+
+    <div className='flex flex-wrap'>
+
     {newsData.map((item,index)=>(
         <div key={index} className='w-[400px] p-2 rounded-md bg-white m-2'>
           <p className='text-blue-800 font-semibold'>{item.title}</p>
@@ -86,6 +107,8 @@ export default function Dashboard() {
           <button onClick={()=>readLater(item)} className='border px-1 rounded-lg mt-5 bg-indigo-200 font-semibold'>Read Later</button>
         </div>
       ))}
+    </div>
+
     </div>
   )
 }

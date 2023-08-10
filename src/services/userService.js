@@ -16,6 +16,10 @@ export const readlat=async(body)=>{
    return await axios.post(baseUrl+`/readlater/${body.id}`,{ readLater:body.readLater})
 }
 export const updateTags=async(body)=>{
-console.log(body)
+
    return await axios.post(baseUrl+`/updateTag/${body.id}`,{interests:body.interests})
+}
+export const getUserDetail=async(id)=>{
+
+   return await axios.get(baseUrl+`/getUserDetail/${id}`)
 }

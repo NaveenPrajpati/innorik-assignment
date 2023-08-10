@@ -65,28 +65,14 @@ export const login = async (req, res) => {
     }
     
   }
-  export const updateTags=async (req, res) => {
-    try {
-      
+  export const updateTag=async (req, res) => {
+    try {    
       const userId=req.params.id
+      const find=await userModel.findByIdAndUpdate({_id:userId},{interests:req.body.interests},{new:true})
 
-      const find=await userModel.findById({_id:userId})
-  
-      
-    let newArr;
- 
-     newArr=find.readLater
-     newArr.push(req.body)
-  
-    
-
-
-   await userModel.findByIdAndUpdate({_id:userId},{readLater:newArr})
-  
-  
    return res.status(201).json({
     success:true, 
-    readLater:newArr,
+    interests:find.interests,
     message: 'tag updated successfully' });
     } catch (error) {
       console.log('error in signup',error)
@@ -95,26 +81,21 @@ export const login = async (req, res) => {
   }
   export const readlater=async (req, res) => {
     try {
-      
-      
-    let newArr;
-    if(user)
-    if(user.interests.includes(tag)){
-    newArr=user.interests.filter(it=>{return it!=tag})
-    }else{
-     newArr=user.interests
-     newArr.push(tag)
-    }
-    else
-    
+      console.log(req.params.id)
+      console.log(req.body.readLater)
+      const userId=req.params.id
 
-
-   await userModel.findByIdAndUpdate({_id:id},{interests:newArr})
-  
-  
+      const user=await userModel.findById({_id:userId})
+    let newArr=[];
+     newArr=user.readLater
+     newArr.push(req.body.readLater)
+ 
+  const data= await userModel.findByIdAndUpdate({_id:userId},{readLater:newArr},{new:true})
+ 
    return res.status(201).json({
-    success:true, 
-    message: 'tag updated successfully' });
+    success:true,
+    readLater:data.readLater, 
+    message: 'read later added' });
     } catch (error) {
       console.log('error in signup',error)
     }
@@ -122,6 +103,26 @@ export const login = async (req, res) => {
   }
 
 
+
+
+
+  export const getUserDetail=async (req, res) => {
+    try {
+      const userId=req.params.id
+
+      const user=await userModel.findById({_id:userId})
+
+    
+  
+      res.status(200).json({
+        success:true,
+        interests:user.interests,
+        readLater:user.readLater
+      });
+    } catch (error) {
+      res.status(500).json({ message: 'An error occurred' });
+    }
+  }
   export const recommendation=async (req, res) => {
     try {
       const userInterests = req.query.interests; // Get user's selected interests
