@@ -10,5 +10,12 @@ export const signup=async(body)=>{
 export const login=async(body)=>{
 
    return await axios.post(baseUrl+'/login', body)
-  
+}
+export const readlat=async(body)=>{
+
+   return await axios.post(baseUrl+`/readlater/${body.id}`,{ readLater:body.readLater})
+}
+export const updateTags=async(body)=>{
+console.log(body)
+   return await axios.post(baseUrl+`/updateTag/${body.id}`,{interests:body.interests})
 }

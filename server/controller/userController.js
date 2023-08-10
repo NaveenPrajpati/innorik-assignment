@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import userModel from "../models/userModel.js";
 import bcrypt from "bcrypt"
+import additionalDetailModel from "../models/additionalDetailModel.js";
 
 
 
@@ -41,7 +42,7 @@ export const login = async (req, res) => {
   export const signup=async (req, res) => {
     try {
       console.log(req.body)
-    const { email, password,name,interests } = req.body;
+    const { email, password,name } = req.body;
   
     const user = await userModel.findOne({email})
   
@@ -54,7 +55,7 @@ export const login = async (req, res) => {
     // Hash the password before storing it
     const hashedPassword = await bcrypt.hash(password, 10);
   
-    userModel.create({email,name,password:hashedPassword,interests});
+    userModel.create({email,name,password:hashedPassword});
   
    return res.status(201).json({
     success:true, 
@@ -64,6 +65,62 @@ export const login = async (req, res) => {
     }
     
   }
+  export const updateTags=async (req, res) => {
+    try {
+      
+      const userId=req.params.id
+
+      const find=await userModel.findById({_id:userId})
+  
+      
+    let newArr;
+ 
+     newArr=find.readLater
+     newArr.push(req.body)
+  
+    
+
+
+   await userModel.findByIdAndUpdate({_id:userId},{readLater:newArr})
+  
+  
+   return res.status(201).json({
+    success:true, 
+    readLater:newArr,
+    message: 'tag updated successfully' });
+    } catch (error) {
+      console.log('error in signup',error)
+    }
+    
+  }
+  export const readlater=async (req, res) => {
+    try {
+      
+      
+    let newArr;
+    if(user)
+    if(user.interests.includes(tag)){
+    newArr=user.interests.filter(it=>{return it!=tag})
+    }else{
+     newArr=user.interests
+     newArr.push(tag)
+    }
+    else
+    
+
+
+   await userModel.findByIdAndUpdate({_id:id},{interests:newArr})
+  
+  
+   return res.status(201).json({
+    success:true, 
+    message: 'tag updated successfully' });
+    } catch (error) {
+      console.log('error in signup',error)
+    }
+    
+  }
+
 
   export const recommendation=async (req, res) => {
     try {

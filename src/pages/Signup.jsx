@@ -16,7 +16,7 @@ const Signup = () => {
   const handleRegister = async (e) => {
    e.preventDefault()
    
-   signup({email,name,password,interests})
+   signup({email,name,password})
    .then(res=>{ 
     toast.success(res.data.message)
     navigate('/login')
