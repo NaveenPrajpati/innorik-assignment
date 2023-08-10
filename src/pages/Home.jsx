@@ -33,11 +33,11 @@ export default function Home() {
     },[])
 
   return (
-    <div className='bg-indigo-100 min-h-screen'>
+    <div className='bg-indigo-300 min-h-screen flex flex-col justify-center'>
     
-<div className='w-fit mx-auto  text-center my-20'>
-  <p className='text-3xl font-bold'>Welcome to world of news</p>
-  <p className='text-lg font-semibold text-slate-500'>Here you can find news of your interest</p>
+<div className='w-fit mx-auto  text-center '>
+  <p className='text-[50px] font-bold'>Welcome to world of news</p>
+  <p className='text-xl font-semibold text-indigo-800'>Here you can find news of your interest</p>
 </div>
     
     </div>

@@ -12,9 +12,9 @@ const navigate=useNavigate()
   }
 
   return (
-    <div className='bg-indigo-800 h-10 text-white'>
-<div className='flex justify-between mx-10 my-auto h-fit items-center'>
-    <h1>LOGO</h1>
+    <div className=''>
+<div className='flex justify-between px-10  items-center bg-indigo-800 h-10 text-white'>
+    <h1 className='font-bold'>NEWS</h1>
     <div>
       {user.isLogin? <div className='flex gap-2 items-center'>
 

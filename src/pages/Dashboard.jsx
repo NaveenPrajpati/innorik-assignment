@@ -42,7 +42,7 @@ export default function Dashboard() {
     useEffect(()=>{
 
         getUserData()
-        // getNewsData()
+        getNewsData()
 
         
     },[baseUrl])
@@ -75,11 +75,12 @@ export default function Dashboard() {
   return (
     <div className='bg-indigo-100 min-h-screen'>
 
-    <div className='flex justify-center gap-2 items-center bg-indigo-400 p-1'>
-    <p className='font-semibold'>Interests-</p>
+
+    <div className='flex justify-center gap-2 flex-wrap items-center bg-indigo-400 p-1'>
+    <p className='font-semibold text-xl'>Interests-</p>
     {interests?.map((it,index)=>(
-      <div key={index} onClick={()=>setSelectIndex(index)} className={`${index===selectIndex?'text-white':''} flex gap-2 items-center bg-indigo-700 p-1 rounded-xl`}>
-          <p >{it}</p>
+      <div key={index} onClick={()=>setSelectIndex(index)} className={`${index===selectIndex?'bg-white text-indigo-700':'bg-indigo-700 text-white'} flex gap-2 items-center  p-1 rounded-2xl`}>
+          <p className='font-semibold'>{it}</p>
           {update && <p className='text-red-500 hover:cursor-pointer' onClick={()=>{
 
          const ne= interests.filter(item=> it!=item)
@@ -87,26 +88,46 @@ export default function Dashboard() {
          }}>x</p>}
       </div>
     ))}
-    {update && <div className='flex items-center bg-white'>
+    {update && <div className='flex items-center bg-white p-1 rounded-xl'>
      <input type="text" placeholder='Add tag' onChange={(e)=>setEditTag(e.target.value)} className=' outline-none rounded-lg px-2'/> 
-     <button onClick={()=> setInterests([...interests,editTag])} className=''>add</button>
+     <button onClick={()=> setInterests([...interests,editTag])} className='mr-1 bg-indigo-400 px-1 rounded-lg text-sm font-semibold text-white'>Add</button>
     </div>}
-   {!update? <button className='px-2 border' onClick={()=>{
+   {!update? <button className='px-2 border-2 border-indigo-700 rounded-2xl' onClick={()=>{setUpdate(true)}} >Edit </button>:
+    <div>
 
-   setUpdate(true)
-   }}>edit </button>:
-    <button className='px-2 border' onClick={updateTag}>update </button>}
+    <button className='px-2 border-2 border-indigo-700 rounded-2xl' onClick={updateTag}>Update </button>
+    <button className='px-2 border-2 border-indigo-700 rounded-2xl' onClick={()=>setUpdate(false)}>Cancel </button>
+    </div>
+    }
     </div>
 
-    <div className='flex flex-wrap'>
+
+   {/* new container */}
+<div className='flex flex-col-reverse sm:flex-row sm:justify-center'>
+    <div className='flex flex-wrap w-fit '>
 
     {newsData.map((item,index)=>(
-        <div key={index} className='w-[400px] p-2 rounded-md bg-white m-2'>
+        <div key={index} className='sm:w-[400px] p-2 rounded-md bg-white m-2'>
+        <img src={item.image} alt="" />
           <p className='text-blue-800 font-semibold'>{item.title}</p>
           <p>{item.description}</p>
           <button onClick={()=>readLater(item)} className='border px-1 rounded-lg mt-5 bg-indigo-200 font-semibold'>Read Later</button>
         </div>
       ))}
+    </div>
+   {readlate.length>0 &&  <div className=''>
+      <p className='bg-indigo-500 p-1 text-white'>Pending to Read</p>
+      {readlate.map((item,index)=>(
+        <div key={index} className='sm:w-[400px] p-2 rounded-md bg-white m-2'>
+        <img src={item.image} alt="" />
+
+          <p className='text-blue-800 font-semibold'>{item.title}</p>
+          <p>{item.description}</p>
+          {/* <button onClick={()=>readLater(item)} className='border px-1 rounded-lg mt-5 bg-indigo-200 font-semibold'>Read Later</button> */}
+        </div>
+      ))}
+    </div>
+   }
     </div>
 
     </div>
